@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="DSA Visualizer">
+  <rect width="64" height="64" rx="15" fill="#0c0e12"/>
+  <rect x=".75" y=".75" width="62.5" height="62.5" rx="14.25" fill="none" stroke="#2a3140" stroke-width="1.5"/>
+  <g fill="#a3e635">
+    <!-- four quarter-discs leave a four-point star of empty space between them -->
+    <path d="M14 14H31A17 17 0 0 1 14 31Z"/>
+    <path d="M33 14H43A7 7 0 0 1 50 21V31A17 17 0 0 1 33 14Z"/>
+    <path d="M14 33A17 17 0 0 1 31 50H14Z"/>
+    <path d="M50 33V43A7 7 0 0 1 43 50H33A17 17 0 0 1 50 33Z"/>
+    <!-- offset stubs, turning like a pinwheel -->
+    <rect x="30.2" y="8.5" width="1.6" height="5.5"/>
+    <rect x="50" y="30.2" width="5.5" height="1.6"/>
+    <rect x="32.2" y="50" width="1.6" height="5.5"/>
+    <rect x="8.5" y="32.2" width="5.5" height="1.6"/>
+  </g>
+</svg>

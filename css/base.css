@@ -1,0 +1,597 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+/* ------------------------------------------------------------------------
+   Design tokens. A calm, neutral interface with a single accent colour.
+   ------------------------------------------------------------------------ */
+:root {
+    color-scheme: dark light;
+    --font-display: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+
+    --bg: #0c0e12;
+    --bg-glow: #0c0e12;
+    --surface: #13161b;
+    --surface-2: #1a1e25;
+    --border: #272c35;
+    --text: #e9ebef;
+    --muted: #8d95a3;
+    --accent: #a3e635;
+    --accent-2: #a3e635;
+    --accent-ink: #1a2e05;
+    --link: #4b5463;
+    --node-internal: #a3e635;
+    --node-internal-ink: #1a2e05;
+    --node-leaf: #3f6212;
+    --node-leaf-ink: #ecfccb;
+    --node-ink: #ffffff;
+    --found-path: #f2b84b;
+    --found: #4ade80;
+    --found-ink: #052e16;
+    --danger: #f2726f;
+    --focus: #d9f99d;
+    --glow: 0 0 0 3px rgba(163, 230, 53, 0.25);
+    --radius: 10px;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #f6f7f9;
+        --bg-glow: #f6f7f9;
+        --surface: #ffffff;
+        --surface-2: #f0f2f5;
+        --border: #dfe3e8;
+        --text: #15181d;
+        --muted: #5a6371;
+        --accent: #4d7c0f;
+        --accent-2: #4d7c0f;
+        --accent-ink: #ffffff;
+        --link: #aab3c0;
+        --node-internal: #4d7c0f;
+        --node-internal-ink: #ffffff;
+        --node-leaf: #bef264;
+        --node-leaf-ink: #1a2e05;
+        --found-path: #b86e00;
+        --found: #15803d;
+        --found-ink: #ffffff;
+        --danger: #c8372f;
+        --focus: #3f6212;
+        --glow: 0 0 0 3px rgba(77, 124, 15, 0.22);
+        --shadow: 0 1px 2px rgba(20, 24, 29, 0.08);
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Two large soft glows drift slowly behind everything */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    z-index: -2;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform;
+}
+
+body::before {
+    top: -28vmax;
+    left: -22vmax;
+    width: 64vmax;
+    height: 64vmax;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 13%, transparent), transparent);
+    animation: drift-a 40s ease-in-out infinite alternate;
+}
+
+body::after {
+    right: -24vmax;
+    bottom: -28vmax;
+    width: 58vmax;
+    height: 58vmax;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--found) 8%, transparent), transparent);
+    animation: drift-b 52s ease-in-out infinite alternate;
+}
+
+@keyframes drift-a {
+    to {
+        transform: translate(14vmax, 12vmax) scale(1.18);
+    }
+}
+
+@keyframes drift-b {
+    to {
+        transform: translate(-16vmax, -10vmax) scale(1.12);
+    }
+}
+
+#bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    padding: 0.6rem 1rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-radius: 6px;
+    font-weight: 600;
+    z-index: 10;
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    width: min(100%, 1240px);
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 4rem;
+}
+
+/* ------------------------------------------------------------------------
+   Breadcrumb bar and page header
+   ------------------------------------------------------------------------ */
+.crumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+}
+
+.crumb-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.8rem 0.3rem 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: var(--shadow);
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.crumb-home:hover {
+    background: var(--surface-2);
+    border-color: var(--accent);
+}
+
+.crumb-arrow {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.15s, stroke 0.15s;
+}
+
+.crumb-home:hover .crumb-arrow {
+    stroke: var(--accent);
+    transform: translateX(-2px);
+}
+
+.crumb-logo {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+}
+
+.crumb-sep {
+    color: var(--muted);
+}
+
+.crumb-current {
+    color: var(--muted);
+}
+
+.header {
+    padding-bottom: 0.25rem;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: clamp(1.5rem, 3.2vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.header p {
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+}
+
+/* ------------------------------------------------------------------------
+   Surfaces
+   ------------------------------------------------------------------------ */
+.panel,
+.hud,
+.rotation-log,
+.card-link {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.panel {
+    width: 100%;
+    padding: 1.25rem;
+}
+
+.section-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.field-label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.hint {
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+/* ------------------------------------------------------------------------
+   Two-column layout: inputs on the left, output on the right
+   ------------------------------------------------------------------------ */
+.split {
+    display: grid;
+    grid-template-columns: minmax(290px, 400px) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+    width: 100%;
+}
+
+.split-side,
+.split-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+}
+
+.split-side .readouts {
+    justify-content: flex-start;
+}
+
+@media (max-width: 900px) {
+    .split {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ------------------------------------------------------------------------
+   Segmented control (algorithm / mode switch)
+   ------------------------------------------------------------------------ */
+.modes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin: 0 0 1rem;
+    padding: 3px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.mode {
+    flex: 1 1 auto;
+    position: relative;
+    text-align: center;
+}
+
+.mode input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+}
+
+.mode span {
+    display: block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--muted);
+    transition: background 0.15s, color 0.15s;
+}
+
+.mode:hover input:not(:checked) + span {
+    color: var(--text);
+}
+
+.mode input:checked + span {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 0 0 1px var(--border), var(--shadow);
+}
+
+.mode input:focus-visible + span {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+}
+
+/* ------------------------------------------------------------------------
+   Inputs
+   ------------------------------------------------------------------------ */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+}
+
+.value-input {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.value-input::placeholder {
+    color: var(--muted);
+    opacity: 0.8;
+}
+
+.error-message {
+    min-height: 1.5rem;
+    margin: 0.5rem 0 0;
+    color: var(--danger);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+@keyframes shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    20%,
+    60% {
+        transform: translateX(-5px);
+    }
+    40%,
+    80% {
+        transform: translateX(5px);
+    }
+}
+
+.shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+/* ------------------------------------------------------------------------
+   Buttons
+   ------------------------------------------------------------------------ */
+.btn-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 40px;
+    padding: 0 1.1rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, filter 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.btn-icon {
+    flex: none;
+    width: 16px;
+    height: 16px;
+}
+
+.btn kbd {
+    padding: 0.05rem 0.4rem;
+    background: rgba(0, 0, 0, 0.18);
+    border: 0;
+    border-radius: 4px;
+    color: inherit;
+    font: 500 0.7rem var(--font-mono);
+    opacity: 0.85;
+}
+
+.btn-secondary kbd {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+}
+
+.btn-secondary.btn-danger {
+    color: var(--danger);
+}
+
+/* Three actions across, one full-width secondary action beneath */
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.action-grid .btn {
+    padding: 0 0.6rem;
+}
+
+.action-grid .btn-secondary {
+    grid-column: 1 / -1;
+}
+
+/* Joined buttons, e.g. Previous | Play | Next */
+.btn-group {
+    display: inline-flex;
+}
+
+.btn-group .btn {
+    border-radius: 0;
+}
+
+.btn-group .btn + .btn {
+    margin-left: -1px;
+}
+
+.btn-group .btn:first-child {
+    border-radius: 8px 0 0 8px;
+}
+
+.btn-group .btn:last-child {
+    border-radius: 0 8px 8px 0;
+}
+
+.btn-group .btn:focus-visible {
+    position: relative;
+    z-index: 1;
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--surface-2);
+    filter: none;
+}
+
+/* ------------------------------------------------------------------------
+   Readouts
+   ------------------------------------------------------------------------ */
+.readouts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+}
+
+.readout {
+    margin: 0;
+    padding: 0.3rem 0.8rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text);
+}
+
+.readout:empty {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .panel {
+        padding: 1rem;
+    }
+}
