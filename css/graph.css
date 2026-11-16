@@ -1,0 +1,318 @@
+/* Graph Lab: drawing board, toolbar and algorithm overlay colours */
+
+.graph-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+}
+
+.board-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.board-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+}
+
+.tool-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.board {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-image: radial-gradient(circle, var(--border) 1.2px, transparent 1.5px);
+    background-size: 26px 26px;
+    background-color: var(--surface);
+}
+
+.graph-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 900 / 520;
+    touch-action: none; /* let pointer events drive dragging instead of page scroll */
+    user-select: none;
+    cursor: crosshair;
+}
+
+.board-hint {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+kbd {
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface-2);
+    font: 0.8rem var(--font-mono);
+}
+
+/* Edges */
+.g-edge-hit {
+    stroke: transparent;
+    stroke-width: 18;
+    cursor: pointer;
+}
+
+.g-edge-line {
+    stroke: var(--link);
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke 0.2s, stroke-width 0.2s;
+    pointer-events: none;
+}
+
+.g-edge.is-selected .g-edge-line {
+    stroke: var(--accent);
+    stroke-width: 5;
+}
+
+.g-edge.is-candidate .g-edge-line {
+    stroke: var(--found-path);
+    stroke-width: 4;
+    stroke-dasharray: 8 6;
+}
+
+.g-edge.is-current .g-edge-line {
+    stroke: var(--found-path);
+    stroke-width: 6;
+}
+
+.g-edge.is-chosen .g-edge-line {
+    stroke: var(--found);
+    stroke-width: 6;
+}
+
+.g-edge.is-rejected .g-edge-line {
+    stroke: var(--danger);
+    stroke-width: 3;
+    stroke-dasharray: 3 7;
+    opacity: 0.8;
+}
+
+/* Weight tags */
+.g-weight {
+    cursor: pointer;
+}
+
+.g-weight rect {
+    fill: var(--bg);
+    stroke: var(--border);
+    stroke-width: 1;
+}
+
+.g-weight:hover rect {
+    stroke: var(--accent);
+}
+
+.g-weight text {
+    fill: var(--text);
+    font: 700 14px var(--font-mono);
+    pointer-events: none;
+}
+
+/* Nodes */
+.g-node {
+    cursor: grab;
+    outline: none;
+}
+
+.g-node:active {
+    cursor: grabbing;
+}
+
+.g-body {
+    fill: var(--surface-2);
+    stroke: var(--muted);
+    stroke-width: 2.5;
+    transition: fill 0.2s, stroke 0.2s;
+}
+
+.g-label {
+    fill: var(--text);
+    font: 600 17px var(--font-body);
+    pointer-events: none;
+}
+
+.g-badge {
+    fill: var(--found-path);
+    font: 700 15px var(--font-mono);
+    paint-order: stroke;
+    stroke: var(--bg);
+    stroke-width: 4px;
+    pointer-events: none;
+}
+
+/* The dashed ring is the handle for dragging out a new edge */
+.g-port-ring {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 5;
+    opacity: 0.45;
+    pointer-events: none;
+    transition: opacity 0.2s, stroke-width 0.2s;
+}
+
+.g-port {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 14;
+    cursor: crosshair;
+    pointer-events: stroke;
+}
+
+.g-node:hover .g-port-ring,
+.g-node:focus-visible .g-port-ring,
+.g-node.is-selected .g-port-ring {
+    opacity: 1;
+    stroke-width: 2.5;
+}
+
+.g-node.is-selected .g-body {
+    stroke: var(--found-path);
+}
+
+.g-node:focus-visible .g-body {
+    stroke: #fff;
+    stroke-width: 4;
+}
+
+.g-node.is-target .g-body {
+    stroke: var(--found);
+    fill: color-mix(in srgb, var(--found) 30%, var(--surface-2));
+}
+
+.g-node.is-visited .g-body {
+    stroke: var(--found);
+    fill: color-mix(in srgb, var(--found) 25%, var(--surface-2));
+}
+
+.g-node.is-current .g-body {
+    stroke: var(--found-path);
+    fill: color-mix(in srgb, var(--found-path) 35%, var(--surface-2));
+}
+
+.g-preview {
+    stroke: var(--accent);
+    stroke-width: 3;
+    stroke-dasharray: 6 6;
+    pointer-events: none;
+}
+
+/* Inline weight editor, positioned over the board */
+.weight-pop {
+    position: absolute;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    transform: translate(-50%, -120%);
+    background: var(--surface-2);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    box-shadow: var(--glow), 0 8px 24px rgba(0, 0, 0, 0.35);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.weight-pop span {
+    color: var(--muted);
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.weight-input {
+    width: 4.5rem;
+    min-height: 38px;
+    padding: 0 0.6rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.weight-ok {
+    min-height: 38px;
+    padding: 0 0.9rem;
+}
+
+/* Result, player, tables */
+.player-host,
+.table-host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* Connect form and edge list */
+.connect-form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+    gap: 0.75rem;
+}
+
+.connect-form .lab-field label {
+    font-weight: 600;
+}
+
+.connect-form select,
+.connect-form input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 0.7rem;
+}
+
+.edge-list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.edge-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: 0.9rem var(--font-mono);
+}
+
+.edge-list li strong {
+    margin-left: auto;
+    color: var(--found-path);
+}
+
+.edge-empty {
+    color: var(--muted);
+    grid-column: 1 / -1;
+}
+
+.btn-tiny {
+    min-height: 30px;
+    padding: 0 0.6rem;
+    font-size: 0.65rem;
+}
+
+.connect-form .btn {
+    grid-column: 1 / -1;
+}

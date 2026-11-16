@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="dark light" />
+        <meta name="description" content="Draw a weighted graph, then watch Kruskal, Prim, Borůvka or Dijkstra work on it step by step." />
+        <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+        <link rel="stylesheet" href="../css/base.css" />
+        <link rel="stylesheet" href="../vendor/katex/katex.min.css" />
+        <link rel="stylesheet" href="../css/lab.css" />
+        <link rel="stylesheet" href="../css/graph.css" />
+        <title>Spanning Trees &amp; Shortest Paths</title>
+    </head>
+
+    <body>
+        <canvas id="bg" aria-hidden="true"></canvas>
+        <a class="skip-link" href="#board">Skip to the graph board</a>
+
+        <main class="container">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a class="crumb-home" href="../index.html">
+                    <svg class="crumb-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+                    <img class="crumb-logo" src="../assets/logo.svg" alt="" />
+                    <span>DSA Visualizer</span>
+                </a>
+                <span class="crumb-sep" aria-hidden="true">/</span>
+                <span class="crumb-current" aria-current="page">Graph Lab</span>
+            </nav>
+            <header class="header">
+                <h1>Graph Lab</h1>
+                <p>Spanning trees and shortest paths on a graph you draw</p>
+            </header>
+
+            <div class="split">
+                <div class="split-side">
+                    <section class="panel" aria-label="Controls">
+                        <div class="graph-toolbar">
+                            <div class="lab-field">
+                                <label for="algorithm">Algorithm</label>
+                                <select id="algorithm">
+                                    <option value="kruskal">Kruskal (spanning tree)</option>
+                                    <option value="prim">Prim (spanning tree)</option>
+                                    <option value="boruvka">Borůvka (spanning tree)</option>
+                                    <option value="dijkstra">Dijkstra (shortest paths)</option>
+                                </select>
+                            </div>
+                            <div class="lab-field" id="sourceField" hidden>
+                                <label for="source">Start node</label>
+                                <select id="source"></select>
+                            </div>
+                        </div>
+                        <p class="error-message" id="error" aria-live="polite"></p>
+                    </section>
+
+                    <section class="panel" aria-label="Edges">
+                        <h2 class="section-title">Connect nodes</h2>
+                        <form class="connect-form" id="connectForm">
+                            <div class="lab-field"><label for="edgeFrom">From</label><select id="edgeFrom"></select></div>
+                            <div class="lab-field"><label for="edgeTo">To</label><select id="edgeTo"></select></div>
+                            <div class="lab-field"><label for="edgeWeight">Weight</label><input id="edgeWeight" type="text" inputmode="numeric" value="1" autocomplete="off" /></div>
+                            <button type="submit" class="btn">Add edge</button>
+                        </form>
+                        <ul class="edge-list" id="edgeList"></ul>
+                    </section>
+                </div>
+                <div class="split-main">
+                    <section class="board-wrap" aria-label="Graph board">
+                        <div class="board-tools">
+                            <div class="tool-group">
+                                <button type="button" class="btn" id="addNode">Add node</button>
+                                <button type="button" class="btn btn-secondary" id="deleteSelected">Delete selected</button>
+                            </div>
+                            <div class="tool-group">
+                                <button type="button" class="btn btn-secondary" id="loadSample">Sample graph</button>
+                                <button type="button" class="btn btn-secondary btn-danger" id="clearGraph">Clear</button>
+                            </div>
+                        </div>
+                        <div class="board hud" id="board">
+                            <svg id="graph" class="graph-svg" role="group" aria-label="Graph board. Click empty space to add a node."></svg>
+                        </div>
+                        <p class="board-hint">
+                            <strong>Click</strong> empty space to add a node · <strong>drag</strong> a node to move it ·
+                            <strong>drag from its dashed ring</strong> onto another node to connect them · <strong>click a weight</strong> to edit it ·
+                            select and press <kbd>Delete</kbd> to remove. With a keyboard, focus a node and use the arrow keys.
+                        </p>
+                        <p class="sr-only" id="message" role="status"></p>
+                    </section>
+
+                    <div class="readouts"><p class="readout lab-result" id="result" role="status" hidden></p></div>
+                    <div id="playerHost" class="player-host"></div>
+                    <div id="tableHost" class="table-host"></div>
+
+                </div>
+            </div>
+        </main>
+
+        <script src="../vendor/katex/katex.min.js"></script>
+        <script src="../src/shared/math.js"></script>
+        <script src="../src/shared/lab.js"></script>
+        <script src="../src/shared/player.js"></script>
+        <script src="../src/graph/algorithms.js"></script>
+        <script src="../src/graph/editor.js"></script>
+        <script src="../src/graph/main.js"></script>
+        <script src="../src/shared/background.js"></script>
+    </body>
+</html>

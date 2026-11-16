@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="dark light" />
+        <meta name="description" content="GCD, primes, Fibonacci, Egyptian fractions and modular arithmetic" />
+        <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+        <link rel="stylesheet" href="../css/base.css" />
+        <link rel="stylesheet" href="../vendor/katex/katex.min.css" />
+        <link rel="stylesheet" href="../css/lab.css" />
+        <title>Number Theory</title>
+    </head>
+
+    <body>
+        <canvas id="bg" aria-hidden="true"></canvas>
+        <a class="skip-link" href="#lab">Skip to visualizer</a>
+
+        <main class="container">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a class="crumb-home" href="../index.html">
+                    <svg class="crumb-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+                    <img class="crumb-logo" src="../assets/logo.svg" alt="" />
+                    <span>DSA Visualizer</span>
+                </a>
+                <span class="crumb-sep" aria-hidden="true">/</span>
+                <span class="crumb-current" aria-current="page">Number theory</span>
+            </nav>
+            <header class="header">
+                <h1>Number Theory</h1>
+                <p>GCD, primes, Fibonacci, Egyptian fractions and modular arithmetic</p>
+            </header>
+
+            <div class="lab-root" id="lab"></div>
+        </main>
+
+        <script src="../vendor/katex/katex.min.js"></script>
+        <script src="../src/shared/math.js"></script>
+        <script src="../src/shared/lab.js"></script>
+        <script src="../src/shared/player.js"></script>
+        <script src="../src/shared/inputs.js"></script>
+        <script src="../src/number-theory/algorithms.js"></script>
+        <script src="../src/shared/background.js"></script>
+    </body>
+</html>
