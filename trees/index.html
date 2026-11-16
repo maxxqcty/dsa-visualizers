@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="dark light" />
+        <meta
+            name="description"
+            content="Type numbers and watch a binary search tree get drawn, then find the path to any node."
+        />
+        <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+        <link rel="stylesheet" href="../css/base.css" />
+        <link rel="stylesheet" href="../vendor/katex/katex.min.css" />
+        <link rel="stylesheet" href="../css/trees.css" />
+        <title>Binary Tree Generator</title>
+    </head>
+
+    <body>
+        <canvas id="bg" aria-hidden="true"></canvas>
+        <a class="skip-link" href="#tree">Skip to tree</a>
+
+        <main class="container">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a class="crumb-home" href="../index.html">
+                    <svg class="crumb-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+                    <img class="crumb-logo" src="../assets/logo.svg" alt="" />
+                    <span>DSA Visualizer</span>
+                </a>
+                <span class="crumb-sep" aria-hidden="true">/</span>
+                <span class="crumb-current" aria-current="page">Binary &amp; AVL trees</span>
+            </nav>
+            <header class="header">
+                <h1 id="title">Binary Tree</h1>
+                <p id="subtitle">A data structure for hierarchical relationships</p>
+            </header>
+
+            <div class="split">
+                <div class="split-side">
+                    <section class="panel" aria-label="Controls">
+                        <fieldset class="modes">
+                            <legend class="sr-only">Tree type</legend>
+                            <label class="mode">
+                                <input type="radio" name="mode" value="bst" checked />
+                                <span>Binary tree</span>
+                            </label>
+                            <label class="mode">
+                                <input type="radio" name="mode" value="avl" />
+                                <span>AVL tree</span>
+                            </label>
+                        </fieldset>
+
+                        <label class="field-label" for="valueInput">
+                            Node value
+                            <span class="hint">
+                                Type a number (or several separated by spaces to insert them in order).
+                                Enter inserts; S searches and D deletes while this field has focus.
+                            </span>
+                        </label>
+                        <input
+                            id="valueInput"
+                            class="value-input"
+                            type="text"
+                            inputmode="decimal"
+                            autocomplete="off"
+                            placeholder="Enter a number"
+                        />
+                        <p class="error-message" id="error" role="alert"></p>
+                        <div class="action-grid">
+                            <button type="button" class="btn" id="insertBtn" aria-keyshortcuts="Enter">Insert <kbd>Enter</kbd></button>
+                            <button type="button" class="btn" id="searchBtn" aria-keyshortcuts="S">Search <kbd>S</kbd></button>
+                            <button type="button" class="btn" id="deleteBtn" aria-keyshortcuts="D">Delete <kbd>D</kbd></button>
+                            <button type="button" class="btn btn-secondary btn-danger" id="clearBtn">Clear tree</button>
+                        </div>
+                    </section>
+
+                    <div class="readouts" role="status" aria-live="polite">
+                        <p class="readout" id="pathDisplay"></p>
+                        <p class="readout" id="treeDepthDisplay" hidden></p>
+                </div>
+                <p class="sr-only" id="status" role="status"></p>
+
+                <label class="toggle">
+                    <input type="checkbox" id="balanceToggle" checked />
+                    <span data-math>Show balance factors, $bf = h_{L} - h_{R}$</span>
+                </label>
+                <section class="rotation-log" id="rotationLog" aria-labelledby="rotationHeading" hidden>
+                    <h2 id="rotationHeading">Rotations</h2>
+                    <ul id="rotationList"></ul>
+                </section>
+                </div>
+                <div class="split-main">
+                    <div class="graph hud" id="tree" tabindex="0" aria-label="Tree diagram"></div>
+                </div>
+            </div>
+        </main>
+
+        <script src="../vendor/d3.v3.js"></script>
+        <script src="../vendor/katex/katex.min.js"></script>
+        <script src="../src/shared/math.js"></script>
+        <script src="../src/trees/tree.js"></script>
+        <script src="../src/trees/avl.js"></script>
+        <script src="../src/trees/tree-render.js"></script>
+        <script src="../src/trees/tree-view.js"></script>
+        <script src="../src/trees/main.js"></script>
+        <script src="../src/shared/background.js"></script>
+        <script>typesetPage();</script>
+    </body>
+</html>

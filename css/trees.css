@@ -1,0 +1,136 @@
+/* Tree */
+.graph {
+    width: 100%;
+    min-height: 28rem;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: safe center;
+    padding: 1rem;
+}
+
+.graph svg {
+    flex: none;
+    overflow: visible;
+}
+
+.link {
+    fill: none;
+    stroke: var(--link);
+    stroke-width: 3;
+    transition: stroke 0.2s, stroke-width 0.2s;
+}
+
+.link.active {
+    stroke: var(--found-path);
+    stroke-width: 5;
+}
+
+.node circle {
+    stroke: var(--bg);
+    stroke-width: 4px;
+}
+
+.node circle.internal {
+    fill: var(--node-internal);
+    color: var(--node-internal);
+}
+
+.node circle.leaf {
+    fill: var(--node-leaf);
+    color: var(--node-leaf);
+}
+
+.node circle.exist {
+    fill: #ef4444;
+    stroke: var(--text);
+    stroke-width: 5px;
+}
+
+.node text {
+    fill: var(--node-ink);
+    font: 700 16px var(--font-mono);
+    pointer-events: none;
+}
+
+.node:has(circle.internal) text.value {
+    fill: var(--node-internal-ink);
+}
+
+.node:has(circle.leaf) text.value {
+    fill: var(--node-leaf-ink);
+}
+
+/* Balance factors */
+.node .balance {
+    display: none;
+    fill: var(--muted);
+    font: 600 12px var(--font-mono);
+}
+
+.graph.show-balance .node .balance {
+    display: block;
+}
+
+.node .balance.unbalanced {
+    fill: #f87171;
+    font-weight: 800;
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.toggle input {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--accent);
+}
+
+.rotation-log {
+    width: 100%;
+    padding: 1rem 1.25rem;
+}
+
+.rotation-log h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+}
+
+.rotation-log ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--muted);
+    font: 0.9rem var(--font-mono);
+}
+
+/* Highlight states: colour plus a thicker ring, so state isn't colour-only */
+.node circle.gold {
+    fill: var(--found-path);
+    stroke: var(--text);
+    stroke-width: 5px;
+}
+
+.node circle.green {
+    fill: var(--found);
+    stroke: var(--text);
+    stroke-width: 7px;
+    animation: pulse 1.4s ease-in-out infinite alternate;
+}
+
+.node:has(circle.gold) text,
+.node:has(circle.green) text {
+    fill: var(--found-ink);
+}
+
+@keyframes pulse {
+    to {
+        transform: scale(1.18);
+    }
+}
+
